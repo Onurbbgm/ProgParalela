@@ -22,7 +22,8 @@ void evolve(void *u, int w, int h)
 	unsigned (*univ)[w] = u;
 	unsigned new[h][w];
  
-	for_y for_x {
+	for(int y = 0; y < h; y++) {
+	    for(int x = 0; x < w; x++){
 		int n = 0;
 		for (int y1 = y - 1; y1 <= y + 1; y1++)
 			for (int x1 = x - 1; x1 <= x + 1; x1++)
@@ -31,21 +32,30 @@ void evolve(void *u, int w, int h)
  
 		if (univ[y][x]) n--;
 		new[y][x] = (n == 3 || (n == 2 && univ[y][x]));
+	    }
 	}
-	for_y for_x univ[y][x] = new[y][x];
+	for(int y = 0; y < h; y++) {
+	   for(int x = 0; x < w; x++){
+	   	univ[y][x] = new[y][x];
+           }
+	}
 }
  
 void game(int w, int h,int count)
 {
 	unsigned univ[h][w];
-	for_xy univ[y][x] = rand() < RAND_MAX / 10 ? 1 : 0;	
-	while(count<1000000) {
+	for(int x = 0; x < w; x++){
+		for(int y = 0; y < h; y++){
+			univ[y][x] = rand() < RAND_MAX / 10 ? 1 : 0;		
+		}	
+	}	
+	while(count<100000) {
 		//show(univ, w, h);
 		evolve(univ, w, h);
 		//usleep(200000);
 		count++;
 	}
-	return;
+	//return;
 }
  
 int main(int c, char **v)
@@ -61,5 +71,4 @@ int main(int c, char **v)
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("%f\n", time_spent);
-
 }
